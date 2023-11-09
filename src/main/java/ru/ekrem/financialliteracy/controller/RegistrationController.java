@@ -11,8 +11,8 @@ import java.util.Arrays;
 @RestController
 @RequestMapping("/registration")
 public class RegistrationController {
-
-    Smsc sms = new Smsc();
+    @Autowired
+    Smsc sms;
     @Autowired
     private final RegistrationService registrationService;
 
@@ -33,7 +33,7 @@ public class RegistrationController {
     @GetMapping
     public void sendPhone(){
         System.out.println("PHONE SENDER");
-        String[] ret = sms.send_sms("79052729311", "Ваш пароль: 123", 1, "", "", 0, "", "");
+        String[] ret = sms.send_sms("79052729311", "Ваш пароль: 123", 2, "", "", 0, "", "");
         System.out.println(Arrays.toString(ret));
     }
 }

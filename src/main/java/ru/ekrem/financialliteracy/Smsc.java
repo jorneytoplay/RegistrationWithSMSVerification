@@ -1,11 +1,17 @@
 package ru.ekrem.financialliteracy;
 
+import org.springframework.stereotype.Component;
+import ru.ekrem.financialliteracy.util.ConstValue;
+
 import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
 
+import static ru.ekrem.financialliteracy.util.ConstValue.*;
+
+@Component
 public class Smsc {
 
     String SMSC_LOGIN    = "jorneytoplay";     // логин клиента
@@ -15,12 +21,8 @@ public class Smsc {
     boolean SMSC_DEBUG   = false;         // флаг отладки
     boolean SMSC_POST    = false;         // Использовать метод POST
 
-    /**
-     * constructors
-     */
-    public Smsc() {
-    }
 
+    public Smsc(){};
     public Smsc(String login, String password) {
         SMSC_LOGIN    = login;
         SMSC_PASSWORD = password;
@@ -60,12 +62,17 @@ public class Smsc {
         String[] m = {};
 
         try {
-            m = _smsc_send_cmd("send", "cost=3&phones=" + URLEncoder.encode(phones, SMSC_CHARSET)
-                    + "&mes=" + URLEncoder.encode(message, SMSC_CHARSET)
-                    + "&translit=" + translit + "&id=" + id + (format > 0 ? "&" + formats[format] : "")
-                    + (sender.equals("") ? "" : "&sender=" + URLEncoder.encode(sender, SMSC_CHARSET))
-                    + (time.equals("") ? "" : "&time=" + URLEncoder.encode(time, SMSC_CHARSET) )
-                    + (query.equals("") ? "" : "&" + query));
+            String formattedMessage = String.format(SEND_SMS_ARGS,
+                    URLEncoder.encode(phones, SMSC_CHARSET),
+                    URLEncoder.encode(message, SMSC_CHARSET),
+                    translit,
+                    id,
+                    (format > 0 ? "&" + formats[format] : ""),
+                    (sender.equals("") ? "" : "&sender=" + URLEncoder.encode(sender, SMSC_CHARSET)),
+                    (time.equals("") ? "" : "&time=" + URLEncoder.encode(time, SMSC_CHARSET)),
+                    (query.equals("") ? "" : "&" + query));
+
+            m = _smsc_send_cmd("send", formattedMessage);
         }
         catch (UnsupportedEncodingException e) {
             System.out.print("Указанная кодировка символов не поддерживается!\n" + e + "\n");
@@ -213,23 +220,16 @@ public class Smsc {
      */
 
     private String[] _smsc_send_cmd(String cmd, String arg){
-        String ret = ",";
-
+        String ret = "";
+        String url;
         try {
-            String _url = (SMSC_HTTPS ? "https" : "http") + "://smsc.ru/sys/" + cmd +".php?login=" + URLEncoder.encode(SMSC_LOGIN, SMSC_CHARSET)
-                    + "&psw=" + URLEncoder.encode(SMSC_PASSWORD, SMSC_CHARSET)
-                    + "&fmt=1&charset=" + SMSC_CHARSET + "&" + arg;
+            int i = 2;
 
-            String url = _url;
-            int i = 0;
-            do {
-                if (i++ > 0) {
-                    url = _url;
-                    url = url.replace("://smsc.ru/", "://www" + (i) + ".smsc.ru/");
-                }
-                ret = _smsc_read_url(url);
+            while (ret.isEmpty() && i < 6){
+                url = String.format(SEND_SMS_HTTP,i,cmd,URLEncoder.encode(SMSC_LOGIN, SMSC_CHARSET),URLEncoder.encode(SMSC_PASSWORD, SMSC_CHARSET),SMSC_CHARSET,arg);
+                //ret = _smsc_read_url(url);
+                i++;
             }
-            while (ret.equals("") && i < 5);
         }
         catch (UnsupportedEncodingException e) {
             System.out.print("Указанная кодировка символов не поддерживается!\n" + e + "\n");
