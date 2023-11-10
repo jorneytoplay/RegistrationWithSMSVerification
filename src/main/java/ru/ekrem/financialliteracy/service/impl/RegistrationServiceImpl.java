@@ -1,17 +1,21 @@
 package ru.ekrem.financialliteracy.service.impl;
 
+import ru.ekrem.financialliteracy.dao.PhoneSmsDAO;
 import ru.ekrem.financialliteracy.dao.RegistrationDAO;
-import ru.ekrem.financialliteracy.dao.UserDAO;
-import ru.ekrem.financialliteracy.dto.registration.NicknameDTO;
+
+import ru.ekrem.financialliteracy.dto.registration.PhoneSmsDto;
+import ru.ekrem.financialliteracy.entity.PhoneSms;
 import ru.ekrem.financialliteracy.entity.RegistrationUser;
-import ru.ekrem.financialliteracy.entity.User;
 
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.ekrem.financialliteracy.service.RegistrationService;
+import ru.ekrem.financialliteracy.service.SmsService;
+import ru.ekrem.financialliteracy.util.GeneratorUtil;
 
 import javax.transaction.Transactional;
+import java.util.Arrays;
 
 @Service
 @AllArgsConstructor
@@ -19,20 +23,50 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Autowired
     private final RegistrationDAO registrationDAO;
+    @Autowired
+    private final PhoneSmsDAO phoneSmsDAO;
+    @Autowired
+    private final SmsService smsService;
 
 
-    @Transactional
+    @Transactional(rollbackOn = Exception.class)
     @Override
-    public boolean indicateName(NicknameDTO nicknameDTO) {
-        if(nicknameDTO!=null){
-            RegistrationUser registrationUser = RegistrationUser
-                    .builder()
-                    .nickname(nicknameDTO.getNickname())
-                    .registration_step(1L)
-                    .build();
-            registrationDAO.save(registrationUser);
+    public boolean setPhone(String phone) {
+        if(phone!=null){
+
+            PhoneSms result = phoneSmsDAO.save(
+                    PhoneSms.builder()
+                    .phone(phone)
+                    .code(Long.valueOf(GeneratorUtil.getRandomNumber(5))) //Генерируем 5-ти разрядное число
+                    .createDate(GeneratorUtil.getTimestamp())
+                    .build()
+            );
+
+            System.out.println(Arrays.toString(smsService.sendSms(
+                    result.getPhone(),
+                    "Код подверждения: " + result.getCode(),
+                    0,
+                    3)));
+
+            registrationDAO.save(
+                    RegistrationUser.builder()
+                            .phone(result.getPhone())
+                            .registration_step(1L)
+                            .build()
+            );
+
             return true;
         }
         return false;
+    }
+
+    @Transactional
+    @Override
+    public boolean confirmPhone(PhoneSmsDto dto) {
+
+        if(phoneSmsDAO.findByPhoneAndCode(dto.getPhone(), dto.getCode()) != null){
+            registrationDAO.updateYourField(dto.getPhone(), 2L);
+        }
+        return true;
     }
 }

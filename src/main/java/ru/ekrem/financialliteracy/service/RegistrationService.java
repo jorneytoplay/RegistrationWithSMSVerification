@@ -1,7 +1,9 @@
 package ru.ekrem.financialliteracy.service;
 
-import ru.ekrem.financialliteracy.dto.registration.NicknameDTO;
+
+import ru.ekrem.financialliteracy.dto.registration.PhoneSmsDto;
 
 public interface RegistrationService {
-    boolean indicateName(NicknameDTO nicknameDTO);
+    boolean setPhone(String phone);
+    boolean confirmPhone(PhoneSmsDto dto);
 }

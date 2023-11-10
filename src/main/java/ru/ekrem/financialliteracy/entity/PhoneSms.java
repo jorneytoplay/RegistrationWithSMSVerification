@@ -1,29 +1,21 @@
 package ru.ekrem.financialliteracy.entity;
 
-
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.Date;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode
 @Entity
-@Table(name = "registration_users")
-public class RegistrationUser {
+public class PhoneSms {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String phone;
+    private Long code;
+    private Long createDate;
 
-    @Temporal(TemporalType.DATE)
-    private Date dateOfBirth;
-
-    private String fullName;
-
-    private Long registration_step;
-    private boolean registration_complete;
 }

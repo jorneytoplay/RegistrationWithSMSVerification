@@ -1,6 +1,6 @@
 CREATE TABLE IF NOT EXISTS registration_users(
     id SERIAL PRIMARY KEY,
-    "nickname"  varchar(50) NOT NULL UNIQUE,
+    "phone"  varchar(15) NOT NULL UNIQUE,
     "full_name" varchar(50),
     "date_of_birth" Date,
     registration_step INT NOT NULL DEFAULT 0,
