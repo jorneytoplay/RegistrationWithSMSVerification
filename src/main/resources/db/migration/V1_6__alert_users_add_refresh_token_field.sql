@@ -1,0 +1,3 @@
+ALTER TABLE IF EXISTS users
+    ADD COLUMN role_id BIGINT NOT NULL,
+    ADD FOREIGN KEY (role_id) REFERENCES roles(id);

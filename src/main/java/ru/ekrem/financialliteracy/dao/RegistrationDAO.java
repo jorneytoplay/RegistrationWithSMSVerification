@@ -11,8 +11,8 @@ import javax.transaction.Transactional;
 
 @Repository
 public interface RegistrationDAO extends JpaRepository<RegistrationUser,Long>{
-    @Transactional
+    /*@Transactional
     @Modifying
     @Query("UPDATE RegistrationUser e SET e.registration_step = :step WHERE e.phone = :phone")
-    RegistrationUser updateYourField(@Param("phone") String phone, @Param("step") Long step);
+    RegistrationUser updateYourField(@Param("phone") String phone, @Param("step") Long step);*/
 }

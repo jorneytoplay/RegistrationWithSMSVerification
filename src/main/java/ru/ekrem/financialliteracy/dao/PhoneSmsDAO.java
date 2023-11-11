@@ -7,5 +7,5 @@ import ru.ekrem.financialliteracy.entity.PhoneSms;
 @Repository
 public interface PhoneSmsDAO extends JpaRepository<PhoneSms,Long> {
 
-    PhoneSms findByPhoneAndCode(String phone,Long code);
+    PhoneSms findByUserIdAndCode(Long useId,Long code);
 }

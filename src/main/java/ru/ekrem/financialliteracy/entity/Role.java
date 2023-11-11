@@ -1,24 +1,20 @@
 package ru.ekrem.financialliteracy.entity;
 
-
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.Date;
 
-@Data
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
+@Getter
+@Setter
 @Entity
-@Table(name = "registration_users")
-public class RegistrationUser {
+@ToString
+@Table(name = "roles")
+public class Role {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    private Long userId;
-
-    private Long registration_step;
-    private boolean registration_complete;
+    private String role;
 }

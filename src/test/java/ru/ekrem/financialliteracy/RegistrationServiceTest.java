@@ -14,24 +14,4 @@ public class RegistrationServiceTest {
 
 
 
-    @MockBean
-    PhoneSmsDAO phoneSmsDAO;
-
-    @Test
-    public void confirmPhoneTest() {
-        String expectedPhone = "1234567890";
-        Long expectedCode = 123456L;
-
-        PhoneSms mockPhoneSms = new PhoneSms();
-        mockPhoneSms.setPhone(expectedPhone);
-        mockPhoneSms.setCode(expectedCode);
-
-        when(phoneSmsDAO.findByPhoneAndCode(expectedPhone, expectedCode)).thenReturn(mockPhoneSms);
-
-        PhoneSms actualPhoneSms = phoneSmsDAO.findByPhoneAndCode(expectedPhone, expectedCode);
-
-        assertNotNull(actualPhoneSms);
-        assertEquals(expectedPhone, actualPhoneSms.getPhone());
-        assertEquals(expectedCode, actualPhoneSms.getCode());
-    }
 }

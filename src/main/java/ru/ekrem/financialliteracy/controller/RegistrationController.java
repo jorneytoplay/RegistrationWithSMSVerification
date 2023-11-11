@@ -1,45 +1,54 @@
 package ru.ekrem.financialliteracy.controller;
 
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import ru.ekrem.financialliteracy.dto.LoginDto;
 import ru.ekrem.financialliteracy.dto.registration.PhoneSmsDto;
+import ru.ekrem.financialliteracy.security.AuthService;
+import ru.ekrem.financialliteracy.security.JwtResponse;
+import ru.ekrem.financialliteracy.security.JwtUser;
 import ru.ekrem.financialliteracy.service.impl.SmsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.ekrem.financialliteracy.service.RegistrationService;
 
 import javax.validation.constraints.NotNull;
+import java.security.Principal;
+import java.util.Arrays;
 
 @RestController
 @RequestMapping("/registration")
 public class RegistrationController {
-    @Autowired
-    SmsServiceImpl sms;
 
     @Autowired
-    private final RegistrationService registrationService;
+    private RegistrationService registrationService;
 
-    public RegistrationController(RegistrationService registrationService) {
-        this.registrationService = registrationService;
-    }
-
+    @Autowired
+    private AuthService authService;
 
     @PostMapping("/phone")
-    public boolean setPhone(@NotNull @RequestBody String phone){
+    public JwtResponse setPhone(@NotNull @RequestBody String phone){
         return registrationService.setPhone(phone);
     }
 
-    @PostMapping("/confirmPhone")
-    public boolean confirmPhone(@RequestBody PhoneSmsDto dto){
-        return registrationService.confirmPhone(dto);
+    @PreAuthorize("hasRole('UNREGISTERED')")
+    @PostMapping("/confirmPhonePassword")
+    public ResponseEntity<JwtResponse> confirmPhone(@RequestBody LoginDto dto){
+        Authentication jwtUser = SecurityContextHolder.getContext().getAuthentication();
+        System.out.println(jwtUser.toString());
+        boolean hasRoleClient = jwtUser.getAuthorities().stream()
+                .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_CLIENT"));
+
+
+        return null;
     }
 
 
-    /*@GetMapping
+    @GetMapping
     public void sendPhone(){
-        System.out.println("PHONE SENDER");
-        //String[] ret = sms.send_sms("79052729311", "Ваш пароль: 123", 0);
-       // System.out.println(sms.get_balance());
-        //System.out.println(Arrays.toString(ret));
-        System.out.println(Arrays.toString(sms.sendSms("79052729311", "Код: 2345", 0,1)));
-       // System.out.println(Arrays.toString(sms.get_sms_cost("79121285212", "Код: 2345", 0)));
-    }*/
+    }
 }

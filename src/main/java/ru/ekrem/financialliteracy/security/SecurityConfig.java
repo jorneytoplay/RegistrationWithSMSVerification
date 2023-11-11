@@ -1,6 +1,7 @@
-package ru.ekrem.financialliteracy.config;
+package ru.ekrem.financialliteracy.security;
 
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
@@ -10,19 +11,26 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(securedEnabled = true)
+@EnableGlobalMethodSecurity(securedEnabled = true, prePostEnabled = true)
 public class SecurityConfig {
 
+
+    @Autowired
+    private JwtFilter jwtFilter;
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .csrf().disable()
                 .cors().disable()
                 .authorizeRequests()
-                .antMatchers("/registration/**").permitAll()
-                .anyRequest().authenticated()
-                .and().build();
+                .antMatchers("/registration/phone").permitAll() // Разрешаем всем
+                .antMatchers("/registration/confirmPhonePassword").authenticated() // Требуем аутентификацию
+                .anyRequest().authenticated() // Все остальные запросы требуют аутентификации
+                .and()
+                .addFilterAfter(jwtFilter, UsernamePasswordAuthenticationFilter.class)
+                .build();
     }
 }

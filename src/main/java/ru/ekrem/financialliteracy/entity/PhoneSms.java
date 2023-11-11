@@ -14,7 +14,7 @@ public class PhoneSms {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String phone;
+    private Long userId;
     private Long code;
     private Long createDate;
 

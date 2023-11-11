@@ -32,7 +32,6 @@ public class SmsServiceImpl implements SmsService {
 
     public String[] sendSms(String phone, String message, int translit, int cost)
     {
-        System.out.println(phone);
 
         String[] m = {};
 
@@ -167,7 +166,6 @@ public class SmsServiceImpl implements SmsService {
 
             while (ret.isEmpty() && i < 6){
                 url = String.format(SEND_SMS_HTTP,i,cmd,URLEncoder.encode(SMS_LOGIN, SMSC_CHARSET),URLEncoder.encode(SMS_PASSWORD, SMSC_CHARSET),SMSC_CHARSET,arg);
-                System.out.println(url);
                 ret = _smsc_read_url(url);
                 i++;
             }

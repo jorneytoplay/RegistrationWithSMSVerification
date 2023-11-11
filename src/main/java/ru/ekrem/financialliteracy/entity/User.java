@@ -4,6 +4,7 @@ package ru.ekrem.financialliteracy.entity;
 import lombok.*;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -17,9 +18,15 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String nickname;
+    private String phone;
     private String mail;
     private String fullName;
-    private String dateOfBirth;
+    @Column(name = "date_of_birth")
+    private LocalDate dateOfBirth;
     private String password;
+    private String refreshToken;
+
+    @OneToOne
+    @JoinColumn(name = "role_id", referencedColumnName = "id")
+    private Role role;
 }

@@ -1,6 +1,7 @@
 CREATE TABLE IF NOT EXISTS phone_sms(
     id SERIAL PRIMARY KEY,
-    phone varchar(15) NOT NULL UNIQUE,
+    user_id BIGINT NOT NULL UNIQUE,
     code int NOT NULL,
-    create_date BIGINT NOT NULL
+    create_date BIGINT NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users(id)
 )
