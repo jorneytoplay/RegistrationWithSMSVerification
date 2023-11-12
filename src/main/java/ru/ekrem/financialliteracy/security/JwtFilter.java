@@ -39,7 +39,6 @@ public class JwtFilter extends OncePerRequestFilter {
         if(token!=null && jwtProvider.validateAccessToken(token)){
             final Claims claims = jwtProvider.getAccessClaims(token);
             System.out.println(token);
-            Long userId = claims.get("userId", Long.class);
             // Парсинг роли
             LinkedHashMap roleMap = claims.get("role", LinkedHashMap.class);
             Set<Role> roles;

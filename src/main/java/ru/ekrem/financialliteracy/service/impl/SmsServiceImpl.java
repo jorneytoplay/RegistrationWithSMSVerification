@@ -17,17 +17,21 @@ public class SmsServiceImpl implements SmsService {
 
     String[] formats = {"", "flash=1", "push=1", "hlr=1", "bin=1", "bin=2", "ping=1", "mms=1", "mail=1", "call=1", "viber=1", "soc=1"};
 
-    @Value("${SMS_LOGIN}")
+
     private String SMS_LOGIN;
-    @Value("${SMS_PASSWORD}")
+
     private String SMS_PASSWORD;
 
     private String SMSC_CHARSET  = "utf-8";       // кодировка сообщения
     private boolean SMSC_DEBUG   = false;         // флаг отладки
     private boolean SMSC_POST    = false;         // Использовать метод POST
 
-
-    public SmsServiceImpl(){};
+    public SmsServiceImpl(
+            @Value("${sms.login}") String SMS_LOGIN,
+            @Value("${sms.password}") String SMS_PASSWORD) {
+        this.SMS_LOGIN = SMS_LOGIN;
+        this.SMS_PASSWORD = SMS_PASSWORD;
+    }
 
 
     public String[] sendSms(String phone, String message, int translit, int cost)

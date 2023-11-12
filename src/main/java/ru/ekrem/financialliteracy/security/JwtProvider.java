@@ -56,10 +56,10 @@ public class JwtProvider {
         final Instant accessExpirationInstant = now.plusMinutes(88888).atZone(ZoneId.systemDefault()).toInstant();
         final Date accessExpiration = Date.from(accessExpirationInstant);
         return Jwts.builder()
-                .setSubject(user.getPhone())
+                .setSubject(String.valueOf(user.getId()))
                 .setExpiration(accessExpiration)
                 .signWith(jwtAccessSecret)
-                .claim("userId",user.getId())
+                .claim("phone",user.getPhone())
                 .claim("role", user.getRole())
                 .compact();
     }

@@ -20,6 +20,7 @@ public class AuthService {
     public JwtResponse login(LoginDto loginDto){
 
         User user =userService.getByPhone(loginDto.getPhone());
+        System.out.println(user.toString());
         if(user.getPassword().equals(loginDto.getPassword())){
             final String accessToken = jwtProvider.generateAccessToken(user);
             final String refreshToken = jwtProvider.generateRefreshToken(user);

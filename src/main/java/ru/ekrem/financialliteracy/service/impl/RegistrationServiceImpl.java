@@ -1,14 +1,16 @@
 package ru.ekrem.financialliteracy.service.impl;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import ru.ekrem.financialliteracy.dao.PhoneSmsDAO;
 import ru.ekrem.financialliteracy.dao.RegistrationDAO;
 
 import ru.ekrem.financialliteracy.dto.LoginDto;
-import ru.ekrem.financialliteracy.dto.registration.PhoneSmsDto;
+import ru.ekrem.financialliteracy.dto.registration.AdditionalUserInformationDto;
+import ru.ekrem.financialliteracy.dto.registration.ConfirmCodeDto;
+import ru.ekrem.financialliteracy.dto.registration.PasswordDto;
 import ru.ekrem.financialliteracy.entity.PhoneSms;
 import ru.ekrem.financialliteracy.entity.RegistrationUser;
 
-import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.ekrem.financialliteracy.entity.User;
@@ -36,6 +38,7 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Autowired
     private AuthService authService;
+
 
 
     @Transactional(rollbackOn = Exception.class)
@@ -66,21 +69,30 @@ public class RegistrationServiceImpl implements RegistrationService {
                         .build()
         );
 
-        JwtResponse response = authService.registration(user);
-        return response;
+        return authService.registration(user);
     }
 
     @Override
-    public boolean confirmPhonePassword(LoginDto dto) {
+    @Transactional
+    public boolean confirmPhonePassword(ConfirmCodeDto dto, Long userId) {
+        if(phoneSmsDAO.deleteByUserIdAndCode(userId, dto.getCode())>0){
+            registrationDAO.updateStepByUserId(userId,2L);
+            return true;
+        }
         return false;
     }
 
+    @Override
     @Transactional
-    public boolean confirmPhone(PhoneSmsDto dto) {
-
-        if(phoneSmsDAO.findByUserIdAndCode(1L, dto.getCode()) != null){
-
-        }
+    public boolean setAdditional(AdditionalUserInformationDto dto,Long userId) {
+        userService.setAdditional(dto,userId);
         return true;
+    }
+
+    @Override
+    @Transactional
+    public JwtResponse setPassword(PasswordDto dto, Long userId) {
+        User user = userService.setPassword(dto,userId);
+        return authService.login(new LoginDto(user.getPhone(),user.getPassword()));
     }
 }
