@@ -13,6 +13,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.GenericFilterBean;
 import org.springframework.web.filter.OncePerRequestFilter;
+import ru.ekrem.financialliteracy.dto.MyUserDetails;
 import ru.ekrem.financialliteracy.entity.Role;
 import ru.ekrem.financialliteracy.entity.RoleEnum;
 
@@ -52,26 +53,18 @@ public class JwtFilter extends OncePerRequestFilter {
                 roles = Collections.emptySet();
             }
 
-            /*final JwtUser jwtInfoToken = JwtUser.builder()
-                    .authenticated(true)
-                    .phone(claims.getSubject())
-                    .userId(userId)
-                    .roles(roles)
-                    .build();
-            jwtInfoToken.setAuthenticated(true);
-            System.out.println(jwtInfoToken.toString() + "WAEFSfasdfasf");
-            SecurityContextHolder.getContext().setAuthentication(jwtInfoToken);
-            filterChain.doFilter(request,response);*/
+
 
 
             List<GrantedAuthority> authorities = new ArrayList<>();
             for (Role role : roles) {
                 authorities.add(new SimpleGrantedAuthority("ROLE_" + role.getRole()));
             }
+            boolean phoneVerified = (Boolean) claims.get("phoneVerified");
 
-            // Создание объекта аутентификации с правильными полномочиями
             UsernamePasswordAuthenticationToken auth =
                     new UsernamePasswordAuthenticationToken(claims.getSubject(), null, authorities);
+            auth.setDetails(phoneVerified);
             SecurityContextHolder.getContext().setAuthentication(auth);
 
 

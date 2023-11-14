@@ -30,8 +30,8 @@ public class AuthService {
         return new JwtResponse(null,null);
     }
 
-    public JwtResponse registration(User user){
-        final String accessToken = jwtProvider.generateRegistrationToken(user);
+    public JwtResponse registration(User user, boolean phoneVerified){
+        final String accessToken = jwtProvider.generateRegistrationToken(user,phoneVerified);
         return new JwtResponse(accessToken,null);
     }
 

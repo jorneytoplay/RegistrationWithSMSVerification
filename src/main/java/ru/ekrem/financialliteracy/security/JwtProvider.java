@@ -9,18 +9,15 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import ru.ekrem.financialliteracy.entity.User;
+import ru.ekrem.financialliteracy.handler.exception.JwtException;
 
-import javax.crypto.KeyGenerator;
+
 import javax.crypto.SecretKey;
-import javax.crypto.spec.SecretKeySpec;
-import java.beans.Encoder;
+
 import java.security.Key;
-import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.Base64;
 import java.util.Date;
 
 @Slf4j
@@ -51,9 +48,9 @@ public class JwtProvider {
                 .compact();
     }
 
-    public String generateRegistrationToken(@NonNull User user) {
+    public String generateRegistrationToken(@NonNull User user,boolean phoneVerified) {
         final LocalDateTime now = LocalDateTime.now();
-        final Instant accessExpirationInstant = now.plusMinutes(88888).atZone(ZoneId.systemDefault()).toInstant();
+        final Instant accessExpirationInstant = now.plusMinutes(2).atZone(ZoneId.systemDefault()).toInstant();
         final Date accessExpiration = Date.from(accessExpirationInstant);
         return Jwts.builder()
                 .setSubject(String.valueOf(user.getId()))
@@ -61,6 +58,7 @@ public class JwtProvider {
                 .signWith(jwtAccessSecret)
                 .claim("phone",user.getPhone())
                 .claim("role", user.getRole())
+                .claim("phoneVerified",phoneVerified)
                 .compact();
     }
 
@@ -91,17 +89,14 @@ public class JwtProvider {
                     .parseClaimsJws(token);
             return true;
         } catch (ExpiredJwtException expEx) {
-            log.error("Token expired", expEx);
-        } catch (UnsupportedJwtException unsEx) {
-            log.error("Unsupported jwt", unsEx);
-        } catch (MalformedJwtException mjEx) {
-            log.error("Malformed jwt", mjEx);
-        } catch (SignatureException sEx) {
-            log.error("Invalid signature", sEx);
+            throw new JwtException("Срок годности токена истёк");
+        } catch (UnsupportedJwtException | MalformedJwtException | SignatureException unsEx) {
+            log.error("JWT validation error", unsEx);
+            throw new JwtException("Ошибка валидации JWT");
         } catch (Exception e) {
-            log.error("invalid token", e);
+            log.error("Invalid token", e);
+            throw new JwtException("Невалидный токен");
         }
-        return false;
     }
 
     public Claims getAccessClaims(@NonNull String token) {

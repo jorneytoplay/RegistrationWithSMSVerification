@@ -15,4 +15,5 @@ public interface UserService {
     User setPassword(PasswordDto dto, Long userId);
 
     boolean setRole(Long roleId,User user);
+    User getById(Long userId);
 }

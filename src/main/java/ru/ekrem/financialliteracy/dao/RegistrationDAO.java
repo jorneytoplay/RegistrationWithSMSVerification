@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import ru.ekrem.financialliteracy.entity.RegistrationUser;
 
 import javax.transaction.Transactional;
+import java.util.Optional;
 
 @Repository
 public interface RegistrationDAO extends JpaRepository<RegistrationUser,Long>{
@@ -15,4 +16,7 @@ public interface RegistrationDAO extends JpaRepository<RegistrationUser,Long>{
     @Modifying
     @Query("UPDATE RegistrationUser e SET e.registration_step = :step WHERE e.userId = :userId")
     int updateStepByUserId(@Param("userId") Long userId, @Param("step") Long step);
+
+    @Query("SELECT e FROM RegistrationUser e WHERE e.userId = :userId")
+    Optional<RegistrationUser> getByUserId(@Param("userId") Long userId);
 }

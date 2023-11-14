@@ -26,6 +26,7 @@ public class User {
     private String fullName;
     @Column(name = "date_of_birth")
     private java.util.Date dateOfBirth;
+    @Column(name = "password")
     private String password;
     private String refreshToken;
 

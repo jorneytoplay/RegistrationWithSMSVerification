@@ -2,3 +2,4 @@
 INSERT INTO roles(role) VALUES ('ADMIN');
 INSERT INTO roles(role) VALUES ('CLIENT');
 INSERT INTO roles(role) VALUES ('ANONYMOUS');
+INSERT INTO roles(role) VALUES ('UNREGISTERED');

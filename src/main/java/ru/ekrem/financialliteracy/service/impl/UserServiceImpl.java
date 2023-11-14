@@ -1,6 +1,7 @@
 package ru.ekrem.financialliteracy.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import ru.ekrem.financialliteracy.dao.RoleDAO;
@@ -10,6 +11,7 @@ import ru.ekrem.financialliteracy.dto.registration.AdditionalUserInformationDto;
 import ru.ekrem.financialliteracy.dto.registration.PasswordDto;
 import ru.ekrem.financialliteracy.entity.Role;
 import ru.ekrem.financialliteracy.entity.User;
+import ru.ekrem.financialliteracy.handler.exception.NotFoundException;
 import ru.ekrem.financialliteracy.security.AuthService;
 import ru.ekrem.financialliteracy.security.JwtResponse;
 import ru.ekrem.financialliteracy.service.UserService;
@@ -41,13 +43,14 @@ public class UserServiceImpl implements UserService {
     public User createAnonymous(String phone) {
         User user = User.builder()
                 .phone(phone)
-                .role(new Role(3L,"UNREGISTERED"))
+                .role(new Role(4L,"UNREGISTERED"))
                 .build();
         return userDAO.save(user);
     }
 
     @Override
     public boolean setAdditional(AdditionalUserInformationDto dto,Long userId) {
+        getById(userId);
         userDAO.setAdditional(dto.getUtilDate(),dto.getFullName(),userId);
         return true;
 
@@ -55,9 +58,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User setPassword(PasswordDto dto,Long userId) {
-        userDAO.changePassword(passwordEncoder.encode(dto.getPassword()),userId);
+        getById(userId);
         User user = userDAO.findById(userId).orElseThrow();
-        System.out.println(user.toString());
+        user.setPassword(dto.getPassword());
+        userDAO.save(user);
         setRole(2L,user);
         return user;
     }
@@ -67,6 +71,13 @@ public class UserServiceImpl implements UserService {
         user.setRole(roleDAO.findById(roleId).orElseThrow());
         userDAO.save(user);
         return true;
+    }
+
+    @Override
+    public User getById(Long userId){
+        User user = userDAO.findById(userId)
+                .orElseThrow(() -> new NotFoundException("User not found with id: " + userId));
+        return user;
     }
 
 

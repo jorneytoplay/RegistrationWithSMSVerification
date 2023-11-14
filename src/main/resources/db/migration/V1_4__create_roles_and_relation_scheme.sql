@@ -1,6 +1,6 @@
 create table if not exists roles(
     id serial PRIMARY KEY ,
-    role varchar(10) NOT NULL UNIQUE
+    role varchar(15) NOT NULL UNIQUE
 );
 
 create table if not exists users_roles_relation(
