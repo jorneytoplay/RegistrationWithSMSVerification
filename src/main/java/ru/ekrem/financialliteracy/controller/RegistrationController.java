@@ -8,7 +8,7 @@ import ru.ekrem.financialliteracy.dto.registration.ConfirmCodeDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.ekrem.financialliteracy.dto.registration.PasswordDto;
-import ru.ekrem.financialliteracy.security.JwtResponse;
+import ru.ekrem.financialliteracy.dto.auth.JwtDto;
 import ru.ekrem.financialliteracy.service.RegistrationService;
 import ru.ekrem.financialliteracy.util.RegistrationValidator;
 
@@ -24,15 +24,9 @@ public class RegistrationController {
     private RegistrationValidator verification;
 
 
-    /**
-     *
-     * @param phone - номер телефона
-     * @return
-     */
-
     @PostMapping("/phone")
-    public ResponseData<JwtResponse> setPhone(@NotNull @RequestBody String phone){
-        return ResponseData.<JwtResponse>builder()
+    public ResponseData<JwtDto> setPhone(@NotNull @RequestBody String phone){
+        return ResponseData.<JwtDto>builder()
                 .success(true)
                 .data(registrationService.setPhone(phone))
                 .build();
@@ -40,9 +34,9 @@ public class RegistrationController {
 
     @PreAuthorize("hasRole('UNREGISTERED')")
     @PostMapping("/confirmPhonePassword")
-    public ResponseData<JwtResponse> confirmPhone(@RequestBody ConfirmCodeDto dto, Authentication authentication){
+    public ResponseData<JwtDto> confirmPhone(@RequestBody ConfirmCodeDto dto, Authentication authentication){
         verification.getVerification(false,authentication);
-        return ResponseData.<JwtResponse>builder()
+        return ResponseData.<JwtDto>builder()
                 .success(true)
                 .data(registrationService.confirmPhonePassword(dto, Long.valueOf(authentication.getName())))
                 .build();
@@ -59,11 +53,12 @@ public class RegistrationController {
 
     @PreAuthorize("hasRole('UNREGISTERED')")
     @PostMapping("/setPassword")
-    public ResponseData<JwtResponse> setPassword(@RequestBody PasswordDto dto, Authentication authentication){
+    public ResponseData<JwtDto> setPassword(@RequestBody PasswordDto dto, Authentication authentication){
         verification.getVerification(true,authentication);
-        return ResponseData.<JwtResponse>builder()
+        return ResponseData.<JwtDto>builder()
                 .success(true)
                 .data(registrationService.setPassword(dto, Long.valueOf(authentication.getName())))
                 .build();
     }
+
 }

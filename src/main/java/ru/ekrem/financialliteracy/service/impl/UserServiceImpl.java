@@ -1,21 +1,18 @@
 package ru.ekrem.financialliteracy.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import ru.ekrem.financialliteracy.dao.RoleDAO;
 import ru.ekrem.financialliteracy.dao.UserDAO;
-import ru.ekrem.financialliteracy.dto.LoginDto;
 import ru.ekrem.financialliteracy.dto.registration.AdditionalUserInformationDto;
 import ru.ekrem.financialliteracy.dto.registration.PasswordDto;
 import ru.ekrem.financialliteracy.entity.Role;
 import ru.ekrem.financialliteracy.entity.User;
 import ru.ekrem.financialliteracy.handler.exception.NotFoundException;
-import ru.ekrem.financialliteracy.security.AuthService;
-import ru.ekrem.financialliteracy.security.JwtResponse;
 import ru.ekrem.financialliteracy.service.UserService;
-import ru.ekrem.financialliteracy.util.RoleEnum;
+
+import javax.transaction.Transactional;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -34,7 +31,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public User setRefreshToken(String phone, String refreshToken) {
+        System.out.println(phone);
         userDAO.setRefreshToken(phone,refreshToken);
         return userDAO.getByPhone(phone);
     }

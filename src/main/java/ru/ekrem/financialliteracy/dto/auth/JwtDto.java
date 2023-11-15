@@ -1,11 +1,11 @@
-package ru.ekrem.financialliteracy.security;
+package ru.ekrem.financialliteracy.dto.auth;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class JwtResponse {
+public class JwtDto {
     private String accessToken;
     private String refreshToken;
 }

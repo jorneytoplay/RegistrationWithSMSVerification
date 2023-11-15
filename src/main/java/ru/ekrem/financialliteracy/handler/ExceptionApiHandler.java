@@ -47,7 +47,7 @@ public class ExceptionApiHandler extends ResponseEntityExceptionHandler {
                         .build());
     }
 
-    @ExceptionHandler(JwtException.class)
+    @ExceptionHandler(value = {JwtException.class})
     @ResponseBody
     public ResponseEntity<ResponseData> jwtTimeOutException(JwtException exception) {
         return ResponseEntity

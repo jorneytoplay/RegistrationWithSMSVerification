@@ -1,11 +1,9 @@
 package ru.ekrem.financialliteracy.service.impl;
 
-import org.springframework.jdbc.SQLWarningException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import ru.ekrem.financialliteracy.dao.PhoneSmsDAO;
 import ru.ekrem.financialliteracy.dao.RegistrationDAO;
 
-import ru.ekrem.financialliteracy.dto.LoginDto;
+import ru.ekrem.financialliteracy.dto.auth.LoginDto;
 import ru.ekrem.financialliteracy.dto.registration.AdditionalUserInformationDto;
 import ru.ekrem.financialliteracy.dto.registration.ConfirmCodeDto;
 import ru.ekrem.financialliteracy.dto.registration.PasswordDto;
@@ -18,7 +16,7 @@ import ru.ekrem.financialliteracy.entity.User;
 import ru.ekrem.financialliteracy.handler.exception.NotFoundException;
 import ru.ekrem.financialliteracy.handler.exception.SqlOperationException;
 import ru.ekrem.financialliteracy.security.AuthService;
-import ru.ekrem.financialliteracy.security.JwtResponse;
+import ru.ekrem.financialliteracy.dto.auth.JwtDto;
 import ru.ekrem.financialliteracy.service.RegistrationService;
 import ru.ekrem.financialliteracy.service.SmsService;
 import ru.ekrem.financialliteracy.service.UserService;
@@ -48,7 +46,7 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Transactional(rollbackOn = Exception.class)
     @Override
-    public JwtResponse setPhone(String phone) {
+    public JwtDto setPhone(String phone) {
         // Пытаемся достать пользователя
         User user = userService.getByPhone(phone);
 
@@ -85,7 +83,7 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Transactional
     @Override
-    public JwtResponse confirmPhonePassword(ConfirmCodeDto dto, Long userId) {
+    public JwtDto confirmPhonePassword(ConfirmCodeDto dto, Long userId) {
         //Достаем пользователя
         User user = userService.getById(userId);
 
@@ -122,7 +120,7 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Transactional
     @Override
-    public JwtResponse setPassword(PasswordDto dto, Long userId) {
+    public JwtDto setPassword(PasswordDto dto, Long userId) {
 
         RegistrationUser registrationUser = registrationDAO.getByUserId(userId)
                 .orElseThrow(() -> new NotFoundException("Регистрация не обнаружена"));

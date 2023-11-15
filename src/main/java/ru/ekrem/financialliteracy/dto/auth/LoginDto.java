@@ -1,4 +1,4 @@
-package ru.ekrem.financialliteracy.dto;
+package ru.ekrem.financialliteracy.dto.auth;
 
 import lombok.*;
 

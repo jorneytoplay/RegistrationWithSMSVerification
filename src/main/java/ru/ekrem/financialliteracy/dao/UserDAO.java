@@ -14,6 +14,7 @@ import javax.transaction.Transactional;
 
 @Repository
 public interface UserDAO extends JpaRepository<User,Long> {
+
     User getByPhone(String phone);
 
     @Modifying
