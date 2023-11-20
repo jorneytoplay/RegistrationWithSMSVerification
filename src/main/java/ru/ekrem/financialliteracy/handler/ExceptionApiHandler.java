@@ -1,7 +1,6 @@
 package ru.ekrem.financialliteracy.handler;
 
 
-import io.jsonwebtoken.ExpiredJwtException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -40,7 +39,7 @@ public class ExceptionApiHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(SqlOperationException.class)
     public ResponseEntity<ResponseData> sqlOperationException(SqlOperationException exception) {
         return ResponseEntity
-                .status(HttpStatus.EXPECTATION_FAILED)
+                .status(HttpStatus.EXPECTATION_FAILED) //TODO
                 .body(ResponseData.<String>builder()
                         .success(false)
                         .data(exception.getMessage())

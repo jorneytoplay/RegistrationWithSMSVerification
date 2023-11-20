@@ -18,7 +18,7 @@ public class AuthService {
     private UserService userService;
 
     public JwtDto login(LoginDto loginDto){
-        System.out.println(loginDto.toString());
+        System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
         User user =userService.getByPhone(loginDto.getPhone());
         System.out.println(user.toString());
         if(user.getPassword().equals(loginDto.getPassword())){
