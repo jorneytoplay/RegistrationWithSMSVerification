@@ -14,6 +14,7 @@ import ru.ekrem.financialliteracy.service.UserService;
 
 import javax.transaction.Transactional;
 
+
 @Service
 public class UserServiceImpl implements UserService {
     @Autowired
@@ -59,7 +60,7 @@ public class UserServiceImpl implements UserService {
     public User setPassword(PasswordDto dto,Long userId) {
         getById(userId);
         User user = userDAO.findById(userId).orElseThrow();
-        user.setPassword(dto.getPassword());
+        user.setPassword(passwordEncoder.encode(dto.getPassword()));
         userDAO.save(user);
         setRole(2L,user);
         return user;

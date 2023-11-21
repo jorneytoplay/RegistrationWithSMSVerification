@@ -2,6 +2,7 @@ package ru.ekrem.financialliteracy.security;
 
 import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import ru.ekrem.financialliteracy.dto.auth.JwtDto;
 import ru.ekrem.financialliteracy.dto.auth.LoginDto;
@@ -17,11 +18,14 @@ public class AuthService {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     public JwtDto login(LoginDto loginDto){
-        System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
         User user =userService.getByPhone(loginDto.getPhone());
         System.out.println(user.toString());
-        if(user.getPassword().equals(loginDto.getPassword())){
+        System.out.println(loginDto.toString());
+        if(passwordEncoder.matches(loginDto.getPassword(),user.getPassword())){
             final String accessToken = jwtProvider.generateAccessToken(user);
             final String refreshToken = jwtProvider.generateRefreshToken(user);
             userService.setRefreshToken(user.getPhone(),refreshToken);

@@ -17,10 +17,9 @@ import ru.ekrem.financialliteracy.dto.MyUserDetails;
 import ru.ekrem.financialliteracy.entity.Role;
 import ru.ekrem.financialliteracy.entity.RoleEnum;
 
+
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -35,7 +34,7 @@ public class JwtFilter extends OncePerRequestFilter {
     private JwtProvider jwtProvider;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException, ServletException {
         final String token = getTokenFromRequest(request);
         if(token!=null && jwtProvider.validateAccessToken(token)){
             final Claims claims = jwtProvider.getAccessClaims(token);

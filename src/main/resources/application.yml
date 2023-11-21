@@ -14,13 +14,13 @@ jwt:
 
 logging:
   level:
+    io.swagger: DEBUG
     org:
       springframework:
         security: DEBUG
 
 
+
 sms:
   login: jorneytoplay
   password: 53LanemO
-
-

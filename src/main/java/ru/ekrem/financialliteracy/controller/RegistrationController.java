@@ -15,8 +15,8 @@ import ru.ekrem.financialliteracy.service.RegistrationService;
 import ru.ekrem.financialliteracy.util.RegistrationValidator;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
+
 
 @RestController
 @RequestMapping("/registration")

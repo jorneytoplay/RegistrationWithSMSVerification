@@ -6,7 +6,6 @@ import lombok.*;
 @Setter
 @ToString
 @NoArgsConstructor
-@AllArgsConstructor
 public class RefreshTokenDto {
     String refresh;
 }

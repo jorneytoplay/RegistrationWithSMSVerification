@@ -1,5 +1,6 @@
 package ru.ekrem.financialliteracy.service.impl;
 
+import javax.transaction.Transactional;
 import ru.ekrem.financialliteracy.dao.PhoneSmsDAO;
 import ru.ekrem.financialliteracy.dao.RegistrationDAO;
 
@@ -23,7 +24,6 @@ import ru.ekrem.financialliteracy.service.UserService;
 import ru.ekrem.financialliteracy.util.GeneratorUtil;
 import ru.ekrem.financialliteracy.util.RegistrationValidator;
 
-import javax.transaction.Transactional;
 
 @Service
 public class RegistrationServiceImpl implements RegistrationService {

@@ -1,8 +1,8 @@
 package ru.ekrem.financialliteracy.entity;
 
 import lombok.*;
-
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 @NoArgsConstructor
 @AllArgsConstructor

@@ -4,7 +4,7 @@ package ru.ekrem.financialliteracy.entity;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.Date;
+import javax.validation.constraints.NotNull;
 
 @Data
 @Builder

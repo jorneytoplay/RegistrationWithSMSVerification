@@ -1,7 +1,10 @@
 package ru.ekrem.financialliteracy.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.ekrem.financialliteracy.dto.auth.LoginDto;
@@ -19,20 +22,21 @@ public class AuthController {
     private AuthService authService;
 
     @Operation(summary = "Логин")
-    @GetMapping("/login")
-    public ResponseData<JwtDto> login(@RequestBody LoginDto dto){
+    @PostMapping("/login")
+    public ResponseData<JwtDto> login(@RequestBody LoginDto login){
         return ResponseData.<JwtDto>builder()
                 .success(true)
-                .data(authService.login(dto))
+                .data(authService.login(login))
                 .build();
     }
 
     @Operation(summary = "Refresh Token")
-    @GetMapping("/refresh")
+    @PostMapping("/refresh")
     public ResponseData<JwtDto> refresh(@RequestBody RefreshTokenDto dto){
         return ResponseData.<JwtDto>builder()
                 .success(true)
                 .data(authService.refresh(dto.getRefresh()))
                 .build();
     }
+
 }
